@@ -30,10 +30,32 @@ int iCount = 0;
    return iCount;
 } /* CountLetters() */
 
+int ISALETTER(unsigned char *p)
+{
+ return ((*p >= 'A') && (*p <= 'Z') || (*p >= 'a') && (*p <= 'z'));
+}
+
+int CountWords(unsigned char *pBuf, int iSize)
+{
+int i, iCount;
+
+	iCount = 0;
+	for (i=0; i<iSize; i++)
+	{
+		if (ISALETTER(&pBuf[i]))
+		{
+			if (i==0 || !ISALETTER(&pBuf[i-1]))
+				iCount++;
+		}
+	}
+	return iCount;
+
+} /* CountWords() */
+
 int main(int argc, char* argv[])
 {
 FILE *fhandle;
-int iLetters;
+int iLetters, iWords;
 size_t filesize;
 unsigned char *pBuffer;
 
@@ -56,6 +78,8 @@ unsigned char *pBuffer;
          fread(pBuffer, 1, filesize, fhandle); // read the contents
          iLetters = CountLetters(pBuffer, filesize);
          printf("File %s contains %d letters\n", argv[1], iLetters);
+	 iWords = CountWords(pBuffer, filesize);
+	 printf("Word count = %d\n", iWords);
       }
       fclose(fhandle); 
    }
